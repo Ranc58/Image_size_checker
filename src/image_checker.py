@@ -10,6 +10,7 @@ class ImageChecker:
     max_elements_for_check = 5
     images_path = os.path.join(os.getcwd(), 'images')
 
+
     @classmethod
     async def _download(cls, url):
         async with aiohttp.ClientSession(
@@ -20,7 +21,7 @@ class ImageChecker:
         ) as session:
             async with session.get(url) as resp:
                 data = await resp.read()
-                name = '{}.png'.format(datetime.now())
+                name = '{}.png'.format(datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M"))
                 image_path = os.path.join(cls.images_path, name)
                 with open(image_path, "wb") as f:
                     f.write(data)
@@ -42,7 +43,7 @@ class ImageChecker:
                 'url': url,
                 'width': width,
                 'height': height,
-                'created_at': str(datetime.now())
+                'created_at': datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M")
             })
             os.remove(os.path.join(cls.images_path, name))
         return data

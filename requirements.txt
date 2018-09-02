@@ -3,3 +3,4 @@ aiohttp-utils==3.0.0
 motor==2.0.0
 Pillow==5.2.0
 asynctest==0.12.2
+marshmallow==2.15.4

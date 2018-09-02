@@ -13,7 +13,7 @@ aiohttp = "==3.4.0"
 aiohttp-utils = "==3.0.0"
 motor = "==2.0.0"
 pillow = "==5.2.0"
-asynctest = "*"
+marshmallow = "==2.15.4"
 
 [requires]
 python_version = "3.7"
