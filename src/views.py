@@ -1,5 +1,3 @@
-from abc import ABC
-
 import aiohttp
 from aiohttp.web import Request
 from aiohttp_utils import Response
@@ -8,7 +6,6 @@ from image_checker import ImageChecker
 
 import forms
 import serializers
-from marshmallow import ValidationError
 
 
 class BaseAPIHandler:
