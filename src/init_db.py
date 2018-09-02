@@ -1,12 +1,14 @@
+import bson
+
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.results import InsertOneResult, InsertManyResult
 
 
-class MongoClient: # todo refactor args for methods
+class MongoClient:
 
     def __init__(self):
-        self.client =AsyncIOMotorClient('localhost', 27017)['image_db']['image_collection']
+        self.client = AsyncIOMotorClient('localhost', 27017)['image_db']['image_collection']
 
     async def insert_one(self, document: dict) -> InsertOneResult:
         result = await self.client.insert_one(document)
@@ -17,9 +19,11 @@ class MongoClient: # todo refactor args for methods
         return result.inserted_ids
 
     async def find_by_id(self, id):
-        result = await self.client.find_one({"_id": ObjectId(id)})
+        try:
+            result = await self.client.find_one({"_id": ObjectId(id)})
+        except bson.errors.InvalidId:
+            return
         return result
-
 
 
 async def setup_db() -> MongoClient:

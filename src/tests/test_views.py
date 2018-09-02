@@ -26,10 +26,16 @@ class MockedDB:
         ]
         return result
 
-    async def find_by_id(self, id, **kwargs):
-        result = [
-            {'_id': id, **kwargs}
-        ]
+    async def find_by_id(self, id):
+        result = {
+            '_id': id,
+            'result': [{
+                'url': 'test.url',
+                'created_at': datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M"),
+                'width': 60,
+                'height': 30
+            }]
+            }
         return result
 
 
@@ -55,7 +61,6 @@ class BaseTestCase(AioHTTPTestCase):
 class TestImagesHandler(BaseTestCase):
     response_fields = ['url', 'width', 'height']
 
-
     @unittest_run_loop
     async def test_post_one_image(self):
         img_url = 'http://www.test.com/img.png'
@@ -71,7 +76,7 @@ class TestImagesHandler(BaseTestCase):
                 return_value=check_result):
             resp = await self.client.request(
                 "POST", "api/v1/images",
-                json={"url": img_url}
+                json=[{"url": img_url}]
             )
             resp_body = await resp.json()
             self.assertEqual(resp.status, 201)
@@ -104,3 +109,14 @@ class TestImagesHandler(BaseTestCase):
             self.assert_response_fieilds(resp_body['result'])
             self.assertTrue(resp_body['id'])
 
+
+class TestImageHandler(BaseTestCase):
+    response_fields = ['url', 'width', 'height']
+
+    @unittest_run_loop
+    async def test_get_info(self):
+        resp = await self.client.request('GET', "api/v1/images/1")
+        resp_body = await resp.json()
+        self.assertEqual(resp.status, 200)
+        self.assert_response_fieilds(resp_body['result'])
+        self.assertTrue(resp_body['id'], 1)

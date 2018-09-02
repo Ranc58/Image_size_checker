@@ -10,7 +10,7 @@ class BaseSerializer:
     JSON_FIELDS = []
 
     @classmethod
-    def to_dict(cls, data, parent=None):
+    def to_dict(cls, data, parent=None) -> dict or list:
         result = dict()
 
         if data is None:
