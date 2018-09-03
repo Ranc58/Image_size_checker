@@ -2,7 +2,7 @@ import os
 from typing import Dict
 import yaml
 
-CONFIG_PATH = os.path.join(os.getcwd(), 'config', 'conf.yaml')
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config', 'conf.yaml')
 
 
 def get_config() -> Dict:
