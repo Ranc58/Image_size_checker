@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 import bson
 
 from bson import ObjectId
@@ -8,19 +10,21 @@ from pymongo.results import InsertOneResult, InsertManyResult
 class MongoClient:
 
     def __init__(self):
-        self.client = AsyncIOMotorClient('localhost', 27017)['image_db']['image_collection']
+        self.client = AsyncIOMotorClient(
+            'localhost', 27017
+        )['image_db']['image_collection']
 
-    async def insert_one(self, document: dict) -> InsertOneResult:
+    async def insert_one(self,
+                         document: Dict[str, List[Dict]]
+                         ) -> InsertOneResult:
         result = await self.client.insert_one(document)
         return result.inserted_id
 
-    async def insert_many(self, data) -> InsertManyResult:
-        result = await self.client.insert_many(data)
-        return result.inserted_ids
-
-    async def find_by_id(self, id):
+    async def find_by_id(self, obj_id: str) -> Dict or None:
         try:
-            result = await self.client.find_one({"_id": ObjectId(id)})
+            result = await self.client.find_one(
+                {"_id": ObjectId(obj_id)}
+            )
         except bson.errors.InvalidId:
             return
         return result

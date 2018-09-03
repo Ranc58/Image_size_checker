@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-
+from typing import List, Dict, Tuple
 
 import aiohttp
 from PIL import Image
@@ -28,13 +28,16 @@ class ImageChecker:
                 return name
 
     @classmethod
-    async def _get_sizes(cls, name: str) -> tuple:
+    async def _get_sizes(cls, name: str) -> Tuple[int, int]:
         image_path = os.path.join(cls.images_path, name)
         image = Image.open(image_path)
         return image.width, image.height
 
     @classmethod
-    def _prepare_data(cls, urls: dict or list, max_request_url=None) -> list:
+    def _prepare_data(cls,
+                      urls: List[Dict],
+                      max_request_url=None
+                      ) -> List[str]:
         sliced_list = cls.max_elements_for_check
         if max_request_url:
             sliced_list = max_request_url
@@ -46,8 +49,10 @@ class ImageChecker:
         return urls_filtered[:sliced_list]
 
     @classmethod
-    async def get_info(cls, urls: list) -> list:
-        data = []
+    async def get_info(cls,
+                       urls: List[Dict]
+                       ) -> List[Dict]:
+        data = []  # type: List[Dict]
         prepared_urls = cls._prepare_data(urls)
         for url in prepared_urls:
             name = await cls._download(url)

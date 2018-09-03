@@ -1,5 +1,5 @@
 import json
-
+from typing import Dict, List
 
 class BaseSerializer:
     DEFAULT_FIELDS = []
@@ -10,7 +10,7 @@ class BaseSerializer:
     JSON_FIELDS = []
 
     @classmethod
-    def to_dict(cls, data, parent=None) -> dict or list:
+    def to_dict(cls, data, parent=None) -> Dict or List:
         result = dict()
 
         if data is None:

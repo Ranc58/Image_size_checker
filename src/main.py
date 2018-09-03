@@ -8,7 +8,7 @@ from middlewares import setup_middlewares
 from init_db import setup_db
 
 
-def setup_app():
+def setup_app() -> web.Application:
     loop = asyncio.get_event_loop()
     app = web.Application(router=routing.ResourceRouter())
     db = loop.run_until_complete(setup_db())
