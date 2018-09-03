@@ -4,11 +4,12 @@ from typing import List, Dict, Tuple
 
 import aiohttp
 from PIL import Image
+from settings import config
 
 
 class ImageChecker:
 
-    max_elements_for_check = 5
+    max_elements_for_check = config['app'].get('max_elems_for_check', 5)
     images_path = os.path.join(os.getcwd(), 'images')
 
     @classmethod
@@ -21,7 +22,7 @@ class ImageChecker:
         ) as session:
             async with session.get(url) as resp:
                 data = await resp.read()
-                name = '{}.png'.format(datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M"))
+                name = f"{datetime.now():%Y.%m.%d %H:%M}.png"
                 image_path = os.path.join(cls.images_path, name)
                 with open(image_path, "wb") as f:
                     f.write(data)
@@ -34,25 +35,19 @@ class ImageChecker:
         return image.width, image.height
 
     @classmethod
-    def _prepare_data(cls,
-                      urls: List[Dict],
-                      max_request_url=None
-                      ) -> List[str]:
-        sliced_list = cls.max_elements_for_check
-        if max_request_url:
-            sliced_list = max_request_url
+    def _prepare_data(cls, urls: List[Dict[str, str]]) -> List[str]:
         if len(urls) > 1:
             urls_list = [k['url'] for k in urls]
             urls_filtered = list(set(urls_list))
         else:
             urls_filtered = [urls[0].get('url')]
-        return urls_filtered[:sliced_list]
+        return urls_filtered[:cls.max_elements_for_check]
 
     @classmethod
     async def get_info(cls,
                        urls: List[Dict]
                        ) -> List[Dict]:
-        data = []  # type: List[Dict]
+        data: List[Dict] = []
         prepared_urls = cls._prepare_data(urls)
         for url in prepared_urls:
             name = await cls._download(url)
@@ -61,7 +56,7 @@ class ImageChecker:
                 'url': url,
                 'width': width,
                 'height': height,
-                'created_at': datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M")
+                'created_at': f"{datetime.now():%Y.%m.%d %H:%M}"
             })
             os.remove(os.path.join(cls.images_path, name))
         return data

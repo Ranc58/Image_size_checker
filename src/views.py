@@ -41,7 +41,7 @@ class ImageHandler(BaseAPIHandler):
         result = await request.app['db'].find_by_id(pk)
         if not result:
             return Response(status=200, data={"id": pk, 'result': []})
-        if result:
+        else:
             result.pop('_id')
         serialized_data = serializers.ImageSerializer.to_api_object(result.get('result'))
         response_data = {"id": pk, 'result': serialized_data}

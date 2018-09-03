@@ -1,0 +1,6 @@
+mongodb:
+  database: image_db
+  host: mongo
+  port: 27017
+app:
+  max_elems_for_check: 5

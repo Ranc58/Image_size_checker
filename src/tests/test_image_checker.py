@@ -28,7 +28,7 @@ class TestImageChecker(TestCase):
         mock_get.return_value.__aenter__.return_value.read = read_mock
         with patch.object(ImageChecker, 'images_path', str(self.tmpdir)):
             response = await ImageChecker._download('http://www.test.com/test.jpg')
-            name = '{}.png'.format(datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M"))
+            name = f"{datetime.now():%Y.%m.%d %H:%M}.png"
             self.assertEqual(response, name)
             self.assertTrue(os.path.exists(os.path.join(str(self.tmpdir), name)))
 
@@ -61,7 +61,7 @@ class TestImageChecker(TestCase):
             'url': 'http://www.test.com/test1.jpg',
             'width': 30,
             'height': 60,
-            'created_at': datetime.strftime(datetime.now(), "%Y.%m.%d %H:%M"),
+            'created_at': f"{datetime.now():%Y.%m.%d %H:%M}",
         }
         response = await ImageChecker.get_info(urls)
         self.assertEqual(len(response), 5)
@@ -81,5 +81,6 @@ class TestImageChecker(TestCase):
         ]
         urls_list = list(set([v['url'] for v in urls]))
         expected_result = urls_list[:5]
-        result = ImageChecker._prepare_data(urls, max_request_url=5)
+        ImageChecker.max_elements_for_check = 5
+        result = ImageChecker._prepare_data(urls)
         self.assertEqual(result, expected_result)

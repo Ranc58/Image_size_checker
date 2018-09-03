@@ -8,7 +8,11 @@ REST API based on aiohttp and MongoDB for check images sizes.
 
 
 # How to install
+#### With docker:
+If it need (By default conf file have settings for docker) - setup MongoDB and max urls count per request in `config/conf.yaml`.\
+Then run `docker-compose build`
 
+#### Without docker
 1) with `pipenv`: \
    `pipenv shell` \
    `pipenv install`
@@ -17,18 +21,25 @@ REST API based on aiohttp and MongoDB for check images sizes.
    `source myenv/bin/activate`\
    `pip3 install -r requirements.txt`\
 Create dir for images! `mkdir src/images`
+
 # Tests
 If you use `pipenv`: `pipenv install --dev`
 
 Run `./run_tests`
 
 # How to run
+#### With Docker:
+`docker-compose up`
 
-For now project don't have config file but have some hardcode (paths, urls, etc.)\
-Run MongoDB locally (for example from docker file: `docker-compose up`)\
+#### Without Docker:
+If it need - setup MongoDB and max urls count per request in `config/conf.yaml`.\
+Run MongoDB (locally for example setup `host` in `conf.yaml` and run mongo from docker file: `docker-compose up mongo`)\
 Run server `python3 src/main.py`
 For get images info : `POST` request to `http://localhost:8080/api/v1/images`.
- Data should be an array and have maximum 5 urls. Like this:
+
+
+# Work example
+ Data should be an array and have by default maximum 5 urls. Like this:
   ```python
   [
     {"url": "https://example.com/1.jpg"},
@@ -36,7 +47,8 @@ For get images info : `POST` request to `http://localhost:8080/api/v1/images`.
     {"url": "https://example.com/3.jpg"},
   ]
   ```
- If request contains >5 elements or have recurring urls - the array will be truncated to 5 elems. 
+ By default, if request contains >5 elements or have recurring urls - the array will be truncated to 5 elems. 
+ You can change it in `config/conf.yaml`.
 
 Response example:
 ```python

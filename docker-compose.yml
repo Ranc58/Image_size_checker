@@ -4,3 +4,10 @@ services:
     image: mongo
     ports:
      - '27017:27017'
+
+  app:
+    build: .
+    depends_on:
+    - mongo
+    ports:
+    - "8080:8080"

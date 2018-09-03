@@ -5,14 +5,16 @@ import bson
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.results import InsertOneResult, InsertManyResult
+from settings import config
 
 
 class MongoClient:
 
     def __init__(self):
         self.client = AsyncIOMotorClient(
-            'localhost', 27017
-        )['image_db']['image_collection']
+            config['mongodb'].get('host', 'localhost'),
+            config['mongodb'].get('port', 27017),
+        )[config['mongodb'].get('database')]['image_collection']
 
     async def insert_one(self,
                          document: Dict[str, List[Dict]]
