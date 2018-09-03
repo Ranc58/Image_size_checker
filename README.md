@@ -35,11 +35,11 @@ Run `./run_tests`
 If it need - setup MongoDB and max urls count per request in `config/conf.yaml`.\
 Run MongoDB (locally for example setup `host` in `conf.yaml` and run mongo from docker file: `docker-compose up mongo`)\
 Run server `python3 src/main.py`
-For get images info : `POST` request to `http://localhost:8080/api/v1/images`.
 
 
 # Work example
- Data should be an array and have by default maximum 5 urls. Like this:
+For get images info : POST request to http://localhost:8080/api/v1/images. \
+Data should be an array and have by default maximum 5 urls. Like this:
   ```python
   [
     {"url": "https://example.com/1.jpg"},
